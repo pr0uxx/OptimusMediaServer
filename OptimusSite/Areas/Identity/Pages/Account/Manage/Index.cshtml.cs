@@ -1,25 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text.Encodings.Web;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Optimus.Data.Entities;
+using System;
+using System.ComponentModel.DataAnnotations;
+using System.Text.Encodings.Web;
+using System.Threading.Tasks;
 
 namespace OptimusSite.Areas.Identity.Pages.Account.Manage
 {
     public partial class IndexModel : PageModel
     {
-        private readonly UserManager<IdentityUser> _userManager;
-        private readonly SignInManager<IdentityUser> _signInManager;
+        private readonly UserManager<OptimusUser> _userManager;
+        private readonly SignInManager<OptimusUser> _signInManager;
         private readonly IEmailSender _emailSender;
 
         public IndexModel(
-            UserManager<IdentityUser> userManager,
-            SignInManager<IdentityUser> signInManager,
+            UserManager<OptimusUser> userManager,
+            SignInManager<OptimusUser> signInManager,
             IEmailSender emailSender)
         {
             _userManager = userManager;
@@ -39,6 +38,11 @@ namespace OptimusSite.Areas.Identity.Pages.Account.Manage
 
         public class InputModel
         {
+            [Required]
+            [DataType(DataType.Text)]
+            [Display(Name = "Display Name")]
+            public string DisplayName { get; set; }
+
             [Required]
             [EmailAddress]
             public string Email { get; set; }
@@ -64,6 +68,7 @@ namespace OptimusSite.Areas.Identity.Pages.Account.Manage
 
             Input = new InputModel
             {
+                DisplayName = user.DisplayName,
                 Email = email,
                 PhoneNumber = phoneNumber
             };
@@ -84,6 +89,11 @@ namespace OptimusSite.Areas.Identity.Pages.Account.Manage
             if (user == null)
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
+            }
+
+            if (Input.DisplayName != user.DisplayName)
+            {
+                user.DisplayName = Input.DisplayName;
             }
 
             var email = await _userManager.GetEmailAsync(user);
@@ -108,6 +118,8 @@ namespace OptimusSite.Areas.Identity.Pages.Account.Manage
                 }
             }
 
+            await _userManager.UpdateAsync(user);
+
             await _signInManager.RefreshSignInAsync(user);
             StatusMessage = "Your profile has been updated";
             return RedirectToPage();
@@ -125,7 +137,6 @@ namespace OptimusSite.Areas.Identity.Pages.Account.Manage
             {
                 return NotFound($"Unable to load user with ID '{_userManager.GetUserId(User)}'.");
             }
-
 
             var userId = await _userManager.GetUserIdAsync(user);
             var email = await _userManager.GetEmailAsync(user);

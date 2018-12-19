@@ -8,7 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Optimus.Data;
+using Optimus.Data.Entities;
 using Optimus.Services.SkillService;
+using OptimusSite.Extensions;
 
 namespace OptimusSite
 {
@@ -34,7 +36,7 @@ namespace OptimusSite
             services.AddDbContext<ApplicationDbContext>(options =>
                 options.UseSqlServer(
                     Configuration.GetConnectionString("DefaultConnection")));
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<OptimusUser, IdentityRole<long>>()
                 .AddDefaultUI(UIFramework.Bootstrap4)
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
@@ -53,6 +55,9 @@ namespace OptimusSite
                 options.LogoutPath = $"/Identity/Account/Logout";
                 options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
             });
+
+            //Claims
+            services.AddScoped<IUserClaimsPrincipalFactory<OptimusUser>, OptimusClaimsIdentityFactory>();
 
             // using Microsoft.AspNetCore.Identity.UI.Services;
             // services.AddSingleton<IEmailSender, EmailSender>();
