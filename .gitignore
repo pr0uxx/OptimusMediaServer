@@ -328,3 +328,5 @@ ASALocalRun/
 
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
+/OptimusSite/donotinclude/Optimus.Data
+/OptimusSite/Optimus.Data
