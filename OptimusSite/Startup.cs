@@ -7,8 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Optimus.Data;
 using Optimus.Services.SkillService;
-using OptimusSite.Data;
 
 namespace OptimusSite
 {
@@ -57,6 +57,7 @@ namespace OptimusSite
             // using Microsoft.AspNetCore.Identity.UI.Services;
             // services.AddSingleton<IEmailSender, EmailSender>();
             services.AddScoped<ISkillService, SkillService>();
+            services.AddScoped<ApplicationDbContext>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
