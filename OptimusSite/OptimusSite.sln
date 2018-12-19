@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OptimusSite", "OptimusSite.
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optimus.Services", "..\Optimus.Services\Optimus.Services.csproj", "{D91AAA58-4EEF-4973-8EF9-E8A33D24D2C4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optimus.Data", "Optimus.Data\Optimus.Data.csproj", "{E2BE35F3-ACB3-4CE3-8592-47AFE0CA8909}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Optimus.Data", "..\Optimus.Data\Optimus.Data.csproj", "{CD8496FF-7560-493A-A73D-FD511719FE31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,10 +23,10 @@ Global
 		{D91AAA58-4EEF-4973-8EF9-E8A33D24D2C4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D91AAA58-4EEF-4973-8EF9-E8A33D24D2C4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D91AAA58-4EEF-4973-8EF9-E8A33D24D2C4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{E2BE35F3-ACB3-4CE3-8592-47AFE0CA8909}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E2BE35F3-ACB3-4CE3-8592-47AFE0CA8909}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E2BE35F3-ACB3-4CE3-8592-47AFE0CA8909}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{E2BE35F3-ACB3-4CE3-8592-47AFE0CA8909}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CD8496FF-7560-493A-A73D-FD511719FE31}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CD8496FF-7560-493A-A73D-FD511719FE31}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CD8496FF-7560-493A-A73D-FD511719FE31}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CD8496FF-7560-493A-A73D-FD511719FE31}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
