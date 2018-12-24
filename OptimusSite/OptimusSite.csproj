@@ -28,7 +28,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Optimus.Data\Optimus.Data.csproj" />
-    <ProjectReference Include="..\Optimus.Services\Optimus.Services.csproj" />
+    <ProjectReference Include="..\Optimus.Service\Optimus.Service.csproj" />
   </ItemGroup>
 
 </Project>

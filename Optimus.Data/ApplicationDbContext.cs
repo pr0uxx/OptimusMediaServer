@@ -41,6 +41,11 @@ namespace Optimus.Data
                     .WithOne()
                     .HasForeignKey(ur => ur.UserId)
                     .IsRequired();
+
+                //Each User can have many ranks
+                b.HasMany(e => e.Ranks)
+                    .WithOne()
+                    .HasForeignKey(e => e.UserId);
             });
         }
     }

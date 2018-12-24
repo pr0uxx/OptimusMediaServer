@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Optimus.Data;
 
 namespace Optimus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181219233732_AddTable-Ranks")]
+    partial class AddTableRanks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -189,13 +191,7 @@ namespace Optimus.Data.Migrations
 
                     b.Property<long>("Rank");
 
-                    b.Property<int>("RankName");
-
-                    b.Property<int>("RankValueA");
-
-                    b.Property<int>("RankValueB");
-
-                    b.Property<int>("RankValueC");
+                    b.Property<string>("RankName");
 
                     b.Property<long>("UserId");
 

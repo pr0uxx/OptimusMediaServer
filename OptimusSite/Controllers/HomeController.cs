@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Optimus.Data;
-using Optimus.Services.SkillService;
+using Optimus.Service.SkillService;
 using OptimusSite.Models;
 using System.Diagnostics;
 using System.Linq;

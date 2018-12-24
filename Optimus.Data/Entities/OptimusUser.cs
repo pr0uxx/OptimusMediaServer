@@ -18,6 +18,8 @@ namespace Optimus.Data.Entities
         [PersonalData]
         public string DisplayName { get; set; }
 
+        public virtual ICollection<UserAssessedRank> Ranks { get; set; }
+
         public virtual ICollection<IdentityUserClaim<long>> Claims { get; set; }
         public virtual ICollection<IdentityUserLogin<long>> Logins { get; set; }
         public virtual ICollection<IdentityUserToken<long>> Tokens { get; set; }

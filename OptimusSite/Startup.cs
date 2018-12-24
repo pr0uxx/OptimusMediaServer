@@ -9,7 +9,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Optimus.Data;
 using Optimus.Data.Entities;
-using Optimus.Services.SkillService;
+using Optimus.Service.SkillService;
 using OptimusSite.Extensions;
 
 namespace OptimusSite
