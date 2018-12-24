@@ -8,18 +8,21 @@ namespace Optimus.Data.Entities
         /// Example Method - Takes whole values, applies a weight and standardises
         /// </summary>
         /// <returns></returns>
-        public virtual decimal StandardiseScore(decimal a, decimal b, decimal c, decimal weightA, decimal weightB, decimal weightC)
+        public virtual void StandardiseScore(decimal a, decimal b, decimal c, decimal weightA, decimal weightB, decimal weightC)
         {
-            //a is a score of 100
             a = GetWeightedValue(a, weightA);
-
-            //b is a score of 300
             b = GetWeightedValue(b, weightB);
-
-            //c is a score of 500
             c = GetWeightedValue(c, weightC);
 
-            return (a + b + c) / 3;
+            StandardisedScore = (a + b + c) / 3;
+        }
+
+        public virtual void StandardiseScore(decimal a, decimal b, decimal weightA, decimal weightB)
+        {
+            a = GetWeightedValue(a, weightA);
+            b = GetWeightedValue(b, weightB);
+
+            StandardisedScore = (a + b) / 2;
         }
 
         /// <summary>
@@ -36,9 +39,17 @@ namespace Optimus.Data.Entities
         public long Id { get; set; }
         public AssessmentRankName RankName { get; set; }
         public long Rank { get; set; }
-        public virtual int RankValueA { get; set; }
-        public virtual int RankValueB { get; set; }
-        public virtual int RankValueC { get; set; }
+        public decimal StandardisedScore { get; private set; }
         public long UserId { get; set; }
+    }
+
+    public class StandardisedTest
+    {
+        public void TestVoid()
+        {
+            var x = new UserAssessedRank();
+
+            x.StandardiseScore(10, 8, 5, 12, 16, 14);
+        }
     }
 }

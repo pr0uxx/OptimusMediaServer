@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Optimus.Data;
 
 namespace Optimus.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20181224192814_Update-UAR")]
+    partial class UpdateUAR
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -191,8 +193,7 @@ namespace Optimus.Data.Migrations
 
                     b.Property<int>("RankName");
 
-                    b.Property<decimal>("StandardisedScore")
-                        .HasColumnType("decimal(18,17)");
+                    b.Property<decimal>("StandardisedScore");
 
                     b.Property<long>("UserId");
 
@@ -200,7 +201,7 @@ namespace Optimus.Data.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("UserAssessedRanks");
+                    b.ToTable("UserAssessedRank");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<long>", b =>
@@ -251,7 +252,7 @@ namespace Optimus.Data.Migrations
             modelBuilder.Entity("Optimus.Data.Entities.UserAssessedRank", b =>
                 {
                     b.HasOne("Optimus.Data.Entities.OptimusUser")
-                        .WithMany("UserAssessedRanks")
+                        .WithMany("Ranks")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade);
                 });

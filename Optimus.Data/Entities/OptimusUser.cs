@@ -9,16 +9,15 @@ namespace Optimus.Data.Entities
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<OptimusUser> manager)
         {
-            // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = new ClaimsIdentity(await manager.GetClaimsAsync(this));
-            // Add custom user claims here
+
             return userIdentity;
         }
 
         [PersonalData]
         public string DisplayName { get; set; }
 
-        public virtual ICollection<UserAssessedRank> Ranks { get; set; }
+        public virtual ICollection<UserAssessedRank> UserAssessedRanks { get; set; }
 
         public virtual ICollection<IdentityUserClaim<long>> Claims { get; set; }
         public virtual ICollection<IdentityUserLogin<long>> Logins { get; set; }
