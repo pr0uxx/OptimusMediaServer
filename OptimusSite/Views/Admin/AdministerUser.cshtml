@@ -1,0 +1,134 @@
+﻿@model OptimusSite.Models.ViewModels.Admin.AdministerUserViewModel
+@using OptimusSite.Models.ViewModels.Admin;
+@{
+	ViewData["Title"] = "AdministerUser";
+	Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>AdministerUsers</h1>
+
+<table class="table" id="user-table">
+	<thead>
+		<tr>
+			<th>
+				Id
+			</th>
+			<th>
+				Display Name
+			</th>
+			<th>
+				Claims
+			</th>
+			<th>
+				Email
+			</th>
+			<th style="text-align : center">
+				Select
+			</th>
+		</tr>
+	</thead>
+	<tbody>
+		@if (Model != null && Model.UserList.Count > 0)
+		{
+			@foreach (UserAdminsitrationData user in Model.UserList)
+			{
+				<tr>
+					<td class="user-id">
+						@user.Id
+					</td>
+					<td>
+						@user.DisplayName
+					</td>
+					<td>
+						@foreach (var claim in user.Claims)
+						{
+							<span>@claim.ClaimType | @claim.ClaimValue - @Enum.GetName(typeof(Optimus.Data.Enums.AssessmentRankName), Int16.Parse(claim.ClaimValue))</span><br />
+						}
+					</td>
+					<td>
+						@user.Email
+					</td>
+					<td align="center">
+						<form>
+							<div class="custom-control custom-checkbox">
+								<input type="checkbox" class="custom-control-input" value="@user.Id" id="check-@user.Id" name="select-user">
+								<label class="custom-control-label" style="margin-left: 1em" for="check-@user.Id">&nbsp;</label>
+							</div>
+						</form>
+					</td>
+				</tr>
+			}
+		}
+		else
+		{
+			<tr>
+				<td colspan="5" align="center">No Users Found</td>
+			</tr>
+		}
+	</tbody>
+</table>
+
+<h2>Add User Claims</h2>
+
+<div class="row">
+	<div class="col-md-6">
+		<h4>Site Wide Claims</h4>
+		<form id="form-add-claims">
+			<select name="claims" class="custom-select">
+				<option selected>Choose Claim</option>
+				@foreach (var item in Model.UserSiteClaimSelectList)
+				{
+					<option value="@item.Value">@item.Key</option>
+				}
+			</select>
+
+			<button class="btn btn-outline-primary" type="submit" id="submit-add-claims">Add to selected</button>
+		</form>
+	</div>
+</div>
+
+@section Scripts{
+
+	<script type="text/javascript">
+		function AddUserClaimModel() {
+			this.userId = null;
+			this.claimType = "";
+			this.claimValue = 0;
+		}
+
+		$claimsForm = $('#form-add-claims');
+
+		$claimsForm.on('submit', function (e) {
+			e.preventDefault();
+
+			$.each($("input[name='select-user']:checked"), function (i, val) {
+
+				var claimModel = new AddUserClaimModel;
+				var userIds = [];
+
+				var sel = $claimsForm.find("select option:selected");
+				claimModel.claimValue = sel.val();
+				claimModel.claimType = "UserSiteClaim";
+				claimModel.userId = ($(this).val());
+				var data = JSON.stringify(claimModel);
+
+				console.log($(this).val());
+
+				console.log(data)
+
+				$.ajax({
+					type: "POST",
+					url: "../admin/AddClaimsToUsers",
+					contentType: "application/json; charset=utf-8",
+					dataType: "json",
+					data: data
+				}).done(function (data) {
+					console.log(data);
+				}).fail(function (data) {
+					console.log(data);
+				})
+			})
+
+		});
+	</script>
+}

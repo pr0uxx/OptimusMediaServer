@@ -1,4 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
+﻿using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Optimus.Data;
 using Optimus.Data.Entities;
 using Optimus.Service.SkillService;
+using OptimusSite.Authorization.AuthorizationHandlers;
+using OptimusSite.Authorization.PolicyProviders;
 using OptimusSite.Extensions;
 
 namespace OptimusSite
@@ -41,6 +45,10 @@ namespace OptimusSite
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddSingleton<IAuthorizationPolicyProvider, MinimumSiteLevelPolicyProvider>();
+
+            services.AddSingleton<IAuthorizationHandler, SiteLevelHandler>();
+
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_2)
                 .AddRazorPagesOptions(options =>
                 {
@@ -48,6 +56,19 @@ namespace OptimusSite
                     options.Conventions.AuthorizeAreaFolder("Identity", "/Account/Manage");
                     options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
                 });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie(options =>
+                {
+                    options.AccessDeniedPath = "/account/denied";
+                    options.LoginPath = "/account/signin";
+                });
+
+            //services.AddAuthorization(options =>
+            //{
+            //    options.AddPolicy("AtLeast21", policy =>
+            //        policy.Requirements.Add(new MinimumAgeRequirement(21)));
+            //});
 
             services.ConfigureApplicationCookie(options =>
             {
@@ -88,6 +109,8 @@ namespace OptimusSite
 
             app.UseMvc(routes =>
             {
+                routes.MapRoute("areaRoute", "{area:exists}/{controller=Admin}/{action=Index}/{id?}");
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
