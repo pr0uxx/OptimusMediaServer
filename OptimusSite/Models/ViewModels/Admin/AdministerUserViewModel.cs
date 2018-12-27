@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using System;
 using System.Collections.Generic;
 
 namespace OptimusSite.Models.ViewModels.Admin
@@ -15,5 +16,6 @@ namespace OptimusSite.Models.ViewModels.Admin
         public ICollection<IdentityUserClaim<long>> Claims { get; set; }
         public string DisplayName { get; set; }
         public string Email { get; set; }
+        public DateTimeOffset? LockOut { get; set; }
     }
 }

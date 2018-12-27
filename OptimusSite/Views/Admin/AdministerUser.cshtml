@@ -22,6 +22,9 @@
 			<th>
 				Email
 			</th>
+			<th>
+				Lockout
+			</th>
 			<th style="text-align : center">
 				Select
 			</th>
@@ -40,13 +43,17 @@
 						@user.DisplayName
 					</td>
 					<td>
+						@{ string[] names = Enum.GetNames(typeof(Optimus.Data.Enums.CustomClaims.UserSiteClaim)); }
 						@foreach (var claim in user.Claims)
 						{
-							<span>@claim.ClaimType | @claim.ClaimValue - @Enum.GetName(typeof(Optimus.Data.Enums.AssessmentRankName), Int16.Parse(claim.ClaimValue))</span><br />
+							<span>@claim.ClaimType | @claim.ClaimValue - @Enum.GetNames(typeof(Optimus.Data.Enums.CustomClaims.UserSiteClaim))[Int16.Parse(claim.ClaimValue) - 1]</span><br />
 						}
 					</td>
 					<td>
 						@user.Email
+					</td>
+					<td>
+						@user.LockOut
 					</td>
 					<td align="center">
 						<form>
@@ -68,22 +75,46 @@
 	</tbody>
 </table>
 
-<h2>Add User Claims</h2>
+
 
 <div class="row">
 	<div class="col-md-6">
-		<h4>Site Wide Claims</h4>
-		<form id="form-add-claims">
-			<select name="claims" class="custom-select">
-				<option selected>Choose Claim</option>
-				@foreach (var item in Model.UserSiteClaimSelectList)
-				{
-					<option value="@item.Value">@item.Key</option>
-				}
-			</select>
+		<div class="card">
+			<div class="card-header">
+				<h4>Site Wide Claims</h4>
+			</div>
+			<div class="card-body">
+				<form id="form-add-claims">
+					<select name="claims" class="custom-select">
+						<option selected>Choose Claim</option>
+						@foreach (var item in Model.UserSiteClaimSelectList)
+						{
+							<option value="@item.Value">@item.Key</option>
+						}
+					</select>
 
-			<button class="btn btn-outline-primary" type="submit" id="submit-add-claims">Add to selected</button>
-		</form>
+					<button class="btn btn-outline-primary mt-4" type="submit" id="submit-add-claims">Add to selected</button>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<div class="col-md-6">
+		<div class="card">
+			<div class="card-header">
+				<h4>Lock out users</h4>
+			</div>
+			<div class="card-body">
+				<form id="form-ban-user">
+					<div class="form-group">
+						<input type="number" class="form-control" placeholder="Input Days"/>
+					</div>
+					
+
+					<button class="btn btn-outline-danger mt-2" type="submit" id="submit-add-ban">Lock out selected</button>
+				</form>
+			</div>
+		</div>
 	</div>
 </div>
 
@@ -96,39 +127,77 @@
 			this.claimValue = 0;
 		}
 
+		function LockoutUserModel() {
+			this.userId = 0;
+			this.lockoutDays = 0;
+		}
+
 		$claimsForm = $('#form-add-claims');
+		$banForm = $('#form-ban-user');
 
-		$claimsForm.on('submit', function (e) {
-			e.preventDefault();
+		$claimsForm.on('submit',
+			function(e) {
+				e.preventDefault();
 
-			$.each($("input[name='select-user']:checked"), function (i, val) {
+				$.each($("input[name='select-user']:checked"),
+					function(i, val) {
 
-				var claimModel = new AddUserClaimModel;
-				var userIds = [];
+						var claimModel = new AddUserClaimModel;
 
-				var sel = $claimsForm.find("select option:selected");
-				claimModel.claimValue = sel.val();
-				claimModel.claimType = "UserSiteClaim";
-				claimModel.userId = ($(this).val());
-				var data = JSON.stringify(claimModel);
+						var sel = $claimsForm.find("select option:selected");
+						claimModel.claimValue = sel.val();
+						claimModel.claimType = "UserSiteClaim";
+						claimModel.userId = ($(this).val());
+						var data = JSON.stringify(claimModel);
 
-				console.log($(this).val());
+						console.log($(this).val());
 
-				console.log(data)
+						console.log(data)
 
-				$.ajax({
-					type: "POST",
-					url: "../admin/AddClaimsToUsers",
-					contentType: "application/json; charset=utf-8",
-					dataType: "json",
-					data: data
-				}).done(function (data) {
-					console.log(data);
-				}).fail(function (data) {
-					console.log(data);
-				})
-			})
+						$.ajax({
+							type: "POST",
+							url: "../admin/AddClaimsToUsers",
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+							data: data
+						}).done(function(data) {
+							console.log(data);
+						}).fail(function(data) {
+							console.log(data);
+						})
+					})
+			});
 
-		});
+		$banForm.on('submit',
+			function (e) {
+				e.preventDefault();
+
+				$.each($("input[name='select-user']:checked"),
+					function (i, val) {
+
+						var banModel = new LockoutUserModel();
+
+						var days = $banForm.find('input').val();
+
+						banModel.lockoutDays = days;
+						banModel.userId = ($(this).val());
+						var data = JSON.stringify(banModel);
+
+						console.log(data)
+
+						$.ajax({
+							type: "POST",
+							url: "../admin/AddLockoutToUser",
+							contentType: "application/json; charset=utf-8",
+							dataType: "json",
+							data: data
+						}).done(function (data) {
+							console.log(data);
+						}).fail(function (data) {
+							console.log(data);
+						})
+					})
+			});
+
 	</script>
 }

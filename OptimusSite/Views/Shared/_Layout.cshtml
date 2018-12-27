@@ -35,9 +35,12 @@
 						<li class="nav-item">
 							<a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
 						</li>
-						<li class="nav-item">
-							<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
-						</li>
+						@if (User.Claims.FirstOrDefault(x => x.Type == "UserSiteClaim" && Int32.Parse(x.Value) >= 6) != null)
+						{
+							<li class="nav-item">
+								<a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin</a>
+							</li>
+						}
 					</ul>
 				</div>
 			</div>

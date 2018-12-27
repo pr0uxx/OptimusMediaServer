@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Optimus.Data.Entities;
 using OptimusSite.Authorization.AuthorizationAttributes;
 using OptimusSite.Models.ViewModels.Admin;
@@ -36,7 +37,8 @@ namespace OptimusSite.Controllers
                     Id = x.Id,
                     Claims = x.Claims,
                     DisplayName = x.DisplayName,
-                    Email = x.Email
+                    Email = x.Email,
+                    LockOut = x.LockoutEnd > DateTime.Now ? x.LockoutEnd : null
                 }).ToList(),
             };
 
@@ -48,11 +50,6 @@ namespace OptimusSite.Controllers
             {
                 viewModel.UserSiteClaimSelectList.Add(Enum.GetName(typeof(UserSiteClaim), i), (int)i);
             }
-
-            //foreach (var i in enumValues)
-            //{
-            //    viewModel.UserSiteClaimSelectList.Add(Enum.GetName(typeof(UserSiteClaim), i), byte(i))
-            //}
 
             return View(viewModel);
         }
@@ -88,6 +85,46 @@ namespace OptimusSite.Controllers
             return Json(result);
         }
 
+        [HttpPost]
+        public async Task<ActionResult> AddLockoutToUser([FromBody] AddUserLockoutModel banModel)
+        {
+            var result = new AddLockoutResult();
+
+            var user = await userManager.Users.FirstOrDefaultAsync(x => x.Id == banModel.UserId);
+
+            if (user != null)
+            {
+                if (!user.LockoutEnabled)
+                {
+                    await userManager.SetLockoutEnabledAsync(user, true);
+                }
+
+                var newLockoutDate = new DateTimeOffset(DateTime.Now.AddDays(banModel.LockoutDays));
+
+                var identityResult = await userManager.SetLockoutEndDateAsync(user, newLockoutDate);
+
+                result = ParseIdentityResult(identityResult, banModel.UserId.ToString()) as AddLockoutResult;
+                result.NewOffset = newLockoutDate;
+            }
+
+            return Json(result);
+        }
+
+        private JsonResultMetaData ParseIdentityResult(IdentityResult identityResult, string id)
+        {
+            var result = new JsonResultMetaData
+            {
+                Success = identityResult.Succeeded,
+                Id = id
+            };
+            foreach (var e in identityResult.Errors)
+            {
+                result.Errors.Add(string.Format("{0}::{1}", e.Code, e.Description));
+            }
+
+            return result;
+        }
+
         public class JsonResultList
         {
             public List<JsonResultMetaData> MetaData { get; set; } = new List<JsonResultMetaData>();
@@ -100,11 +137,22 @@ namespace OptimusSite.Controllers
             public List<string> Errors { get; set; } = new List<string>();
         }
 
+        public class AddLockoutResult : JsonResultMetaData
+        {
+            public DateTimeOffset? NewOffset { get; set; }
+        }
+
         public class AddUserClaimModel
         {
             public string UserId { get; set; }
             public string ClaimType { get; set; }
             public string ClaimValue { get; set; }
+        }
+
+        public class AddUserLockoutModel
+        {
+            public long UserId { get; set; }
+            public int LockoutDays { get; set; }
         }
     }
 }
