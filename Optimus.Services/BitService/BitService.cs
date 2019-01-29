@@ -42,7 +42,9 @@ namespace Optimus.Services.BitService
                 new KeyValuePair<string, string>("format", "json_extended")
             };
 
-            var result = await HttpGet(p).Result.Content.ReadAsStringAsync();
+            var httpResult = await HttpGet(p);
+                
+            var result = await httpResult.Content.ReadAsStringAsync();
 
             var convertedResult = JsonConvert.DeserializeObject<SearchResult>(result);
 
