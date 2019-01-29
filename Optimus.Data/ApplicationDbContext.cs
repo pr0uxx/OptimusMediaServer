@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
+using Optimus.Data.Models;
 
 namespace Optimus.Data
 {
@@ -9,5 +10,7 @@ namespace Optimus.Data
             : base(options)
         {
         }
+
+        public DbSet<SavedFile> SavedFiles { get; set; }
     }
 }

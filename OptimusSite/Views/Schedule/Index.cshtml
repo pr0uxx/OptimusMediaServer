@@ -1,0 +1,70 @@
+﻿@model OptimusSite.Models.SearchResultViewModel
+@{
+    ViewData["Title"] = "Index";
+}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<style type="text/css">
+	.custom-card {
+		background-repeat: no-repeat !important;
+		background-size: cover !important;
+		background-position: left !important;
+		min-height: 12em;
+		box-shadow: inset 0px -4em 20px 0px rgba(0, 0, 0, 0.5)
+	}
+
+	.custom-card > card-footer {
+		max-height: 4em;
+	}
+
+	.t-result-container {
+		max-height: 3em;
+		/*overflow-x: hidden;*/
+		display: -webkit-box;
+		/*height: 60px;*/
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+	}
+
+	.card-footer
+	{
+		border: none;
+	}
+</style>
+
+<div class="container-fluid">
+	<div class="row">
+		@if (Model.SearchResult != null)
+		{
+			@foreach (var m in Model.SearchResult.torrent_results)
+			 {
+				 <div class="col-12 col-sm-6 col-lg-3 mb-2 mt-4">
+					 <div class="ml-1 card custom-card" style="background: url(@m.ImageUrl); ">
+						 <div class="card-body">
+
+						 </div>
+						 <div class="card-footer pb-0">
+							 <div class="row p-0">
+								 <div class="col-2">
+									 <a class="btn btn-outline-light btn-light btn-sm" href="@m.download">
+										 <i class="fas fa-magnet"></i>
+									 </a>
+								 </div>
+								 <div class="col-10 t-result-container">
+									 <p class="text-right text-light">@m.title</p>
+								 </div>
+							 </div>
+
+
+
+						 </div>
+					 </div>
+
+				 </div>
+			 }
+		}
+		
+	</div>
+</div>
+
+

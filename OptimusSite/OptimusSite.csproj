@@ -23,12 +23,19 @@
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.2.0" PrivateAssets="All" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="2.2.0" />
+    <PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
   </ItemGroup>
 
 
   <ItemGroup>
     <ProjectReference Include="..\Optimus.Data\Optimus.Data.csproj" />
     <ProjectReference Include="..\Optimus.Services\Optimus.Services.csproj" />
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Folder Include="MvcExtensions\" />
+    <Folder Include="wwwroot\img\" />
   </ItemGroup>
 
 </Project>

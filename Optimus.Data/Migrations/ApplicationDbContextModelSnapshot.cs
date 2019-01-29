@@ -180,6 +180,29 @@ namespace Optimus.Data.Migrations
                     b.ToTable("AspNetUserTokens");
                 });
 
+            modelBuilder.Entity("Optimus.Data.Models.SavedFile", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("FileFullPath");
+
+                    b.Property<string>("Filename");
+
+                    b.Property<string>("SiteRelativeImageUrl");
+
+                    b.Property<string>("TvdbSeriesId");
+
+                    b.Property<bool>("Watched");
+
+                    b.Property<TimeSpan>("WatchedTime");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("SavedFiles");
+                });
+
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
                 {
                     b.HasOne("Microsoft.AspNetCore.Identity.IdentityRole")

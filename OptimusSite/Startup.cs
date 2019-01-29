@@ -8,7 +8,17 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Optimus.Data;
+using Optimus.Services.AnalysisService;
+using Optimus.Services.BitService;
+using Optimus.Services.DataAccessService;
+using Optimus.Services.ProgramInterfaceService;
+using Optimus.Services.ReadService;
 using Optimus.Services.SkillService;
+using Optimus.Services.TvdbService;
+using Optimus.Services.UtilitiesService;
+using Optimus.Services.WriteService;
+using OptimusSite.Services;
+//using OptimusSite.Models;
 
 namespace OptimusSite
 {
@@ -47,6 +57,8 @@ namespace OptimusSite
                     options.Conventions.AuthorizeAreaPage("Identity", "/Account/Logout");
                 });
 
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.ConfigureApplicationCookie(options =>
             {
                 options.LoginPath = $"/Identity/Account/Login";
@@ -56,7 +68,16 @@ namespace OptimusSite
 
             // using Microsoft.AspNetCore.Identity.UI.Services;
             // services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddScoped<IAnalysisService, AnalysisService>();
+            services.AddScoped<IBitService, BitService>();
+            services.AddScoped<IDataAccessService, DataAccessService>();
+            services.AddScoped<IProgramInterfaceService, ProgramInterfaceService>();
+            services.AddScoped<IReadService, ReadService>();
             services.AddScoped<ISkillService, SkillService>();
+            services.AddScoped<IFileUtilities, FileUtilities>();
+            services.AddScoped<ITvdbService, TvdbService>();
+            services.AddScoped<IWriteService, WriteService>();
+
             services.AddScoped<ApplicationDbContext>();
         }
 

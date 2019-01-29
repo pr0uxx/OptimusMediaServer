@@ -1,0 +1,253 @@
+﻿@using System.Web
+@using Microsoft.AspNetCore.Rewrite.Internal.PatternSegments
+@using Optimus.Services.Models
+@model OptimusSite.Models.TvShowViewModel
+@{
+	ViewData["Title"] = "TvShows";
+}
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.6.3/css/all.css" integrity="sha384-UHRtZLI+pbxtHCWp1t77Bi1L4ZtiqrqD80Kn4Z8NTSRyMA2Fd33n5dQ8lWUE00s/" crossorigin="anonymous">
+<style type="text/css">
+	.custom-card {
+		background-repeat: no-repeat !important;
+		background-size: cover !important;
+		background-position: left !important;
+		min-height: 12em;
+		box-shadow: inset 0px -4em 20px 0px rgba(0, 0, 0, 0.5)
+	}
+
+		.custom-card > card-footer {
+			max-height: 4em;
+		}
+
+	.t-result-container {
+		max-height: 3em;
+		display: -webkit-box;
+		-webkit-line-clamp: 3;
+		-webkit-box-orient: vertical;
+		text-overflow: ellipsis;
+	}
+
+	.card-footer {
+		border: none;
+	}
+
+	video {
+		min-height: 100%;
+	}
+
+	source {
+		height: 100%;
+		width: 100%;
+	}
+
+	/*Modal Override*/
+	.modal-dialog {
+		max-width: 60%;
+		min-width: 40%;
+	}
+</style>
+
+<h1>TvShows</h1>
+
+
+<div class="container-fluid">
+	<div class="row">
+
+		@if (string.IsNullOrEmpty(Model.Order))
+		{
+			<a class="btn btn-outline-success mb-2" href="/Schedule/TvShows?order=createddesc">Newly downloaded</a>
+			string key = string.Empty;
+			@foreach (var f in Model.files)
+			{
+				if (!string.Equals(key, f.MediaInformation.Name, StringComparison.OrdinalIgnoreCase))
+				{
+					<div class="col-12 pt-4">
+						<p class="lead">@f.MediaInformation.Name</p>
+					</div>
+					key = f.MediaInformation.Name;
+				}
+
+				<div class="col-12 col-sm-6 col-lg-3 mb-2 mt-4">
+					@if (string.IsNullOrEmpty(f.FileImageUrl))
+					{
+						<div class='ml-1 card custom-card' style='background: url(/img/bcs.jpg);'>
+							<div class="card-body">
+
+							</div>
+							<div class="card-footer pb-0">
+								<div class="row p-0">
+									<div class="col-2">
+										<a class="btn btn-outline-light btn-light btn-sm" target="_blank" href="http://localhost:59169/Home/GetTestVideo?filepath=@HttpUtility.UrlEncode(f.FileInfo.FullName)">
+											<i class="far fa-play-circle"></i>
+										</a>
+									</div>
+									<div class="col-10 t-result-container">
+										<p class="text-right text-light">@f.Filename</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+					else
+					{
+						<div class='ml-1 card custom-card' style='background: url(@f.FileImageUrl);'>
+							<div class="card-body">
+
+							</div>
+							<div class="card-footer pb-0">
+								<div class="row p-0">
+									<div class="col-2">
+										<a class="btn btn-outline-light btn-light btn-sm" target="_blank" href="http://localhost:59169/Home/GetTestVideo?filepath=@HttpUtility.UrlEncode(f.FileInfo.FullName)">
+											<i class="far fa-play-circle"></i>
+										</a>
+									</div>
+									<div class="col-10 t-result-container">
+										<p class="text-right text-light">@f.Filename</p>
+									</div>
+								</div>
+							</div>
+						</div>
+					}
+				</div>
+			}
+		}
+		else if (Model.Order.Equals("CreatedDesc", StringComparison.OrdinalIgnoreCase))
+		{
+			<a class="btn btn-outline-success mb-2" href="/Schedule/TvShows">All Series</a>
+			<div class="col-12">
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Name</th>
+							<th>Episode</th>
+							<th>Season</th>
+							<th>Date Downloaded</th>
+							<th></th>
+						</tr>
+					</thead>
+					<tbody>
+						@foreach (var f in Model.files)
+						{
+							<tr>
+								<td>
+									@f.MediaInformation.Name
+								</td>
+								<td>
+									@f.MediaInformation.Episode
+								</td>
+								<td>
+									@f.MediaInformation.Season
+								</td>
+								<td>
+									@f.FileInfo.CreationTime
+								</td>
+								<td>
+									<btn class="btn btn-outline-success btn-sm open-video" data-videolink="http://localhost:59169/Home/GetTestVideo?filepath=@HttpUtility.UrlEncode(f.FileInfo.FullName)">
+										<i class="far fa-play-circle"></i>
+									</btn>
+								</td>
+							</tr>
+						}
+					</tbody>
+				</table>
+
+
+			</div>
+		}
+	</div>
+
+				<!-- Modal -->
+				<div class="modal fade" id="video-modal" tabindex="-1" role="dialog" aria-hidden="true">
+					<div class="modal-dialog modal-dialog-centered" role="document">
+						<div class="modal-content">
+							<div class="modal-header">
+								<h5 class="modal-title" id="exampleModalCenterTitle">Title Goes Here</h5>
+								<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+									<span aria-hidden="true">&times;</span>
+								</button>
+							</div>
+							<div class="modal-body">
+								<div class="container text-center">
+									<div id="embedder" class="embed-responsive">
+										<video id="video-player" controls="" autoplay="" name="media">
+											<source id="modal-source" src="http://localhost:59169/Home/GetTestVideo?filepath=O%3a%5cMedia%5cUnsortedDownloads%5cAlone.S05E04.WEB.h264-TBS%5brarbg%5d%5calone.s05e04.web.h264-tbs.mkv" type="video/mp4">
+										</video>
+									</div>
+								</div>
+							</div>
+							<div class="modal-footer">
+								<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+								<button type="button" class="btn btn-primary">Save changes</button>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+
+			@section Scripts {
+				<script type="text/javascript">
+					function gcd(a, b) {
+						return (b == 0) ? a : gcd(b, a % b);
+					}
+
+					function round(value, precision) {
+						var multiplier = Math.pow(10, precision || 0);
+						return Math.round(value * multiplier) / multiplier;
+					}
+
+					$('.open-video').on('click',
+						function (e) {
+							let url = $(this).data('videolink');
+							let vid = document.getElementById('video-player');
+							let gcdValue = gcd(vid.videoWidth, vid.videoHeight)
+							let difmod = (vid.videoWidth / gcdValue) / (vid.videoHeight / gcdValue);
+							let rdif = round(difmod, 1);
+							let embedder = $('#embedder');
+							switch (rdif) {
+								case 1.8:
+									if (embedder.hasClass('embed-responsive-21by9')) {
+										embedder.removeClass('embed-responsive-21by9');
+										$('#embedder').addClass('embed-responsive-16by9');
+									}
+									else if (!embedder.hasClass('embed-responsive-16by9'));
+									{
+										$('#embedder').addClass('embed-responsive-16by9');
+									}
+									break;
+								case 2.4:
+									if (embedder.hasClass('embed-responsive-16by9')) {
+										embedder.removeClass('embed-responsive-16by9');
+										embedder.removeClass('embed-responsive-21by9');
+									}
+									else if (!embedder.hasClass('embed-responsive-21by9'));
+									{
+										$('#embedder').addClass('embed-responsive-21by9');
+									}
+									break;
+								default:
+									console.log('Bad difmod: ' + difmod + '::' + rdif);
+							}
+
+							$('#modal-source').attr('src', url);
+							$('#video-player')[0].load();
+
+							$('#video-modal').modal();
+						})
+
+					$('#video-modal').on('hide.bs.modal',
+						function () {
+							let videoPlayer = document.getElementById('video-player');
+							videoPlayer.pause();
+						})
+
+					$('#video-modal').on('shown.bs.modal',
+						function () {
+
+						});
+
+
+				</script>
+
+			}
+
+

@@ -3,7 +3,9 @@ using Optimus.Data;
 using Optimus.Services.SkillService;
 using OptimusSite.Models;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using Microsoft.Net.Http.Headers;
 
 namespace OptimusSite.Controllers
 {
@@ -24,6 +26,25 @@ namespace OptimusSite.Controllers
             var emailConfirmedUsers = dbContext.Users.Where(x => x.EmailConfirmed == false);
 
             return View();
+        }
+
+        [HttpGet]
+        public IActionResult GetTestVideo(string filepath)
+        {
+            filepath = filepath.TrimStart('\\');
+
+            return File(System.IO.File.OpenRead(filepath), "video/mp4", true);
+
+            //var fs = System.IO.File.Open(filepath,
+            //    FileMode.Open, FileAccess.Read, FileShare.Read);
+
+
+            //if (fs != null)
+            //{
+            //    return new FileStreamResult(fs, new MediaTypeHeaderValue("video/mp4"));
+            //}
+
+            //return BadRequest();
         }
 
         public IActionResult Privacy()
